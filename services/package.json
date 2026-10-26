@@ -1,5 +1,5 @@
 {
-  "name": "org.jellyfin.webos.service",
+  "name": "org.weboscommunity.jellyfin.webos5.service",
   "description": "Jellyfin Discovery Service",
   "main": "service.js"
 }

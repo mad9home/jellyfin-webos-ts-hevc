@@ -1,16 +1,16 @@
 {
-    "appDescription": "A webOS client to connect to a Jellyfin Server instance and stream media.",
+    "appDescription": "Unofficial webOS client for Jellyfin using an MPEG-TS HTTP profile for HEVC copy/remux on older LG webOS devices.",
     "icon": "assets/icon-80.png",
     "main": "index.html",
     "bgImage": "assets/splash.png",
-    "title": "Jellyfin",
+    "title": "Jellyfin TS-HEVC",
     "type": "web",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "splashBackground": "assets/splash.png",
     "bgColor": "#000b25",
-    "vendor": "Jellyfin Project",
+    "vendor": "webOS Community",
     "largeIcon": "assets/icon-130.png",
     "iconColor": "#000b25",
-    "id": "org.jellyfin.webos",
+    "id": "org.weboscommunity.jellyfin.webos5",
     "disableBackHistoryAPI": true
 }

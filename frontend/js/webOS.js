@@ -35,6 +35,84 @@
         'multiserver'
     ];
 
+    function applyTsHevcProfile(profile) {
+        if (!profile) {
+            return profile;
+        }
+
+        profile.MaxStreamingBitrate = Math.max(profile.MaxStreamingBitrate || 0, 140000000);
+        profile.MaxStaticBitrate = Math.max(profile.MaxStaticBitrate || 0, 140000000);
+        profile.EnableMpegtsM2TsMode = false;
+        profile.MaxWidth = 3840;
+        profile.MaxHeight = 2160;
+        profile.MaxVideoBitDepth = 10;
+        profile.MaxAudioBitDepth = 24;
+        profile.MaxAudioChannels = 6;
+        profile.MaxFramerate = 60;
+        profile.RequireAvc = false;
+        profile.RequireNonAnamorphic = false;
+        profile.DeInterlace = false;
+        profile.EnableAutoStreamCopy = true;
+        profile.EnableVideoStreamCopy = true;
+        profile.EnableAudioStreamCopy = true;
+        profile.ResponseProfiles = [];
+
+        var out = [];
+        var hasTs = false;
+        var profiles = profile.TranscodingProfiles || [];
+
+        for (var i = 0; i < profiles.length; i++) {
+            var p = profiles[i];
+
+            if (p.Type !== 'Video') {
+                out.push(p);
+                continue;
+            }
+
+            if (hasTs) {
+                continue;
+            }
+
+            p.Container = 'ts';
+            p.SegmentContainer = '';
+            p.Protocol = 'http';
+            p.Context = 'Streaming';
+            p.Type = 'Video';
+            p.VideoCodec = 'hevc';
+            p.AudioCodec = 'ac3,eac3,aac,mp3,mp2';
+            p.MaxAudioChannels = '6';
+            p.MaxAudioBitDepth = '24';
+            p.AudioBitRate = '640000';
+            delete p.SegmentLength;
+            delete p.SegmentMaxWidth;
+            delete p.MinSegments;
+            delete p.MaxWidth;
+            delete p.MaxHeight;
+
+            out.push(p);
+            hasTs = true;
+        }
+
+        if (!hasTs) {
+            out.push({
+                Container: 'ts',
+                SegmentContainer: '',
+                Protocol: 'http',
+                Context: 'Streaming',
+                Type: 'Video',
+                VideoCodec: 'hevc',
+                AudioCodec: 'ac3,eac3,aac,mp3,mp2',
+                MaxAudioChannels: '6',
+                MaxAudioBitDepth: '24',
+                AudioBitRate: '640000',
+                BreakOnNonKeyFrames: false
+            });
+        }
+
+        profile.TranscodingProfiles = out;
+        return profile;
+    }
+
     window.NativeShell = {
         AppHost: {
             init: function () {
@@ -73,13 +151,13 @@
 
             getDeviceProfile: function (profileBuilder) {
                 postMessage('AppHost.getDeviceProfile');
-                return profileBuilder({
+                return applyTsHevcProfile(profileBuilder({
                     enableMkvProgressive: false,
                     enableSsaRender: true,
                     supportsDolbyAtmos: deviceInfo ? deviceInfo.dolbyAtmos : null,
                     supportsDolbyVision: deviceInfo ? deviceInfo.dolbyVision : null,
                     supportsHdr10: deviceInfo ? deviceInfo.hdr10 : null
-                });
+                }));
             },
 
             getSyncProfile: function (profileBuilder) {

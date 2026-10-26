@@ -1,9 +1,9 @@
 {
-  "id": "org.jellyfin.webos.service",
+  "id": "org.weboscommunity.jellyfin.webos5.service",
   "description": "Jellyfin Discovery Service",
   "services": [
     {
-      "name": "org.jellyfin.webos.service"
+      "name": "org.weboscommunity.jellyfin.webos5.service"
     }
   ]
 }
